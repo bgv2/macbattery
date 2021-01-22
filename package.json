@@ -9,7 +9,8 @@
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\""
+    "format": "standard --fix",
+    "lint": "standard"
   },
   "keywords": [],
   "author": "ed789d0",
@@ -50,6 +51,15 @@
     "@electron-forge/maker-rpm": "^6.0.0-beta.54",
     "@electron-forge/maker-squirrel": "^6.0.0-beta.54",
     "@electron-forge/maker-zip": "^6.0.0-beta.54",
-    "electron": "11.2.0"
-  }
+    "electron": "11.2.0",
+    "standard": "16.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ed789d0/macbattery.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ed789d0/macbattery/issues"
+  },
+  "homepage": "https://github.com/ed789d0/macbattery#readme"
 }
