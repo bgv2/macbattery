@@ -7,7 +7,9 @@ if (process.platform !== 'darwin') {
   remote.getCurrentWindow().close()
 }
 const { exec } = require('child_process')
-exec('ioreg -abrc AppleSmartBattery | plist-to-json /dev/stdin', (err, stdout) => {
+const { app, nativeImage } = require('electron').remote
+// todo: find a way to get battery age and manufacture date
+/* exec('ioreg -abrc AppleSmartBattery | npx plist-to-json /dev/stdin', (err, stdout) => {
   if (err) {
     alert(err)
   } else {
@@ -18,4 +20,25 @@ exec('ioreg -abrc AppleSmartBattery | plist-to-json /dev/stdin', (err, stdout) =
     })
     console.log(stdout)
   }
+}) */
+exec('ioreg -abrc AppleSmartBattery', (err, stdout) => {
+  if (err) {
+    alert(err)
+  } else {
+    stdout = require("plist").parse(stdout)[0]
+    Object.keys(stdout).forEach((key) => {
+      let data
+      if (stdout[key] instanceof Buffer) {
+        data = atob(btoa(stdout[key]))
+      } else {
+        data = typeof stdout[key] === 'string' ? stdout[key] : JSON.stringify(stdout[key])
+      }
+      document.getElementById('info').innerHTML += `<b>${key}</b> ${data}<br/>`
+    })
+    console.log(stdout)
+  }
 })
+nativeImage.createThumbnailFromPath("/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/com.apple.macpro-cylinder.icns",
+  { width: 500, height: 500 })
+  .then((a) => console.log(Buffer.from(a.toPNG())))
+  // todo: save this picture and see if it's the right icon
