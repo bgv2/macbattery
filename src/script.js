@@ -42,3 +42,4 @@ nativeImage.createThumbnailFromPath("/System/Library/CoreServices/CoreTypes.bund
   { width: 500, height: 500 })
   .then((a) => console.log(Buffer.from(a.toPNG())))
   // todo: save this picture and see if it's the right icon
+  // todo: find the right Mac icon to show in the interface
