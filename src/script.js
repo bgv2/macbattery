@@ -8,6 +8,7 @@ if (process.platform !== 'darwin') {
 }
 const { exec } = require('child_process')
 const { app, nativeImage } = require('electron').remote
+const _ = require("lodash")
 // todo: find a way to get battery age and manufacture date
 /* exec('ioreg -abrc AppleSmartBattery | npx plist-to-json /dev/stdin', (err, stdout) => {
   if (err) {
@@ -33,13 +34,30 @@ exec('ioreg -abrc AppleSmartBattery', (err, stdout) => {
       } else {
         data = typeof stdout[key] === 'string' ? stdout[key] : JSON.stringify(stdout[key])
       }
-      document.getElementById('info').innerHTML += `<b>${key}</b> ${data}<br/>`
+      if (key == "MaxCapacity") {
+        //let heading = document.getElementById("heading")
+        let mtr = document.getElementById("mtr")
+        mtr.value = ((stdout["MaxCapacity"] / stdout["DesignCapacity"]) * 100).toFixed(2)
+        // mtr.min = 0
+        // mtr.max = 100
+        // mtr.low = 50
+        // mtr.high = 79
+        // mtr.optimum = 80
+        //document.getElementById("heading").appendChild(mtr)
+      }
+      //alert(`Capacity: ${((stdout["MaxCapacity"] / stdout["DesignCapacity"]) * 100).toFixed(2)}`)
+      document.getElementById('info').innerHTML += `<b>${_.startCase(key)}</b> ${data}<br/>`
     })
     console.log(stdout)
   }
 })
-nativeImage.createThumbnailFromPath("/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/com.apple.macpro-cylinder.icns",
-  { width: 500, height: 500 })
-  .then((a) => console.log(Buffer.from(a.toPNG())))
-  // todo: save this picture and see if it's the right icon
-  // todo: find the right Mac icon to show in the interface
+//nativeImage.createThumbnailFromPath("/System/Library/CoreServices/CoreTypes.bundle/Contents/Resources/com.apple.macpro-cylinder.icns",
+let comp = nativeImage.createFromNamedImage("NSComputer")
+console.log(comp.getScaleFactors())
+//comp = Buffer.from(comp.toPNG())
+require("fs").writeFile("out.png", comp.toPNG(), 'binary', function (err) {
+  console.log(err);
+})
+document.getElementById("compicon").src = comp.toDataURL()
+// todo: find the right Mac icon to show in the interface and get battery age
+// get battery percentage with `pmset -g batt | awk 'FNR==2{print $3}'`
