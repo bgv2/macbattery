@@ -22,7 +22,7 @@ const _ = require("lodash")
     console.log(stdout)
   }
 }) */
-exec('ioreg -abrc AppleSmartBattery', (err, stdout) => {
+exec('ioreg -arc AppleSmartBattery', (err, stdout) => {
   if (err) {
     alert(err)
   } else {
